@@ -1,0 +1,284 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>Regalo</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xEBEBEB);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+    const sizes ={
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    //redimensionar canvas
+      const canvas = document.getElementById('myCanvas');
+      window.addEventListener('resize', () => {
+      })
+sizes.width = window.innerWidth;
+sizes.height = window.innerHeight;
+
+ camera.aspect = sizes.width / sizes.height;
+ camera.updateProjectionMatrix();
+ renderer.setSize(sizes.width, sizes.height);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 30);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    ///LUCES
+   var light1= new THREE.DirectionalLight(0Xffffff,0.8);
+   light1.position.set (0,20,50);
+   scene.add(light1);
+function EstacionTrenNavidad({ x, y, z }) {
+  
+  // CASETA NAVIDEÑA
+
+
+  // Base de la caseta
+  var geoBase = new THREE.BoxGeometry(6, 2.5, 3);
+  var materialBase = new THREE.MeshLambertMaterial({ color: 0xb22222 });
+  var meshBase = new THREE.Mesh(geoBase, materialBase);
+  meshBase.position.set(0, 0, 0);
+
+  // Techo nevado
+  var geoTecho = new THREE.ConeGeometry(4.5, 2.5, 4);
+  var materialTecho = new THREE.MeshLambertMaterial({ color: 0xffffff });
+  var meshTecho = new THREE.Mesh(geoTecho, materialTecho);
+  meshTecho.rotation.y = 0.8;
+  meshTecho.position.set(0, 2.3, 0);
+
+  // Ventanas
+  var geoVentana = new THREE.BoxGeometry(1, 1, 0.1);
+  var materialVentana = new THREE.MeshLambertMaterial({ color: 0xA8DDFF});
+
+  var ventana1 = new THREE.Mesh(geoVentana, materialVentana);
+  ventana1.position.set(-2, 0.3, 1.55);
+
+  var ventana2 = new THREE.Mesh(geoVentana, materialVentana);
+  ventana2.position.set(2, 0.3, 1.55);
+
+  // Puerta
+  var geoPuerta = new THREE.BoxGeometry(1.2, 1.8, 0.15);
+  var materialPuerta = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+  var meshPuerta = new THREE.Mesh(geoPuerta, materialPuerta);
+  meshPuerta.position.set(0, -0.3, 1.55);
+
+  // Letrero
+  var geoLetrero = new THREE.BoxGeometry(4, 0.6, 0.1);
+  var materialLetrero = new THREE.MeshLambertMaterial({ color: 0x006400 });
+  var meshLetrero = new THREE.Mesh(geoLetrero, materialLetrero);
+  meshLetrero.position.set(0, 2.5, 1.55);
+
+  // Poste letreros
+  var geoPoste = new THREE.CylinderGeometry(0.1, 0.1, 0.8, 16);
+  var materialPoste = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+
+  var poste1 = new THREE.Mesh(geoPoste, materialPoste);
+  poste1.position.set(-1.9, 2.1, 1.55);
+
+  var poste2 = new THREE.Mesh(geoPoste, materialPoste);
+  poste2.position.set(1.9, 2.1, 1.55);
+
+  // Chimenea
+  var geoChimenea = new THREE.BoxGeometry(0.6, 1.2, 0.6);
+  var materialChimenea = new THREE.MeshLambertMaterial({ color: 0x8b0000 });
+  var meshChimenea = new THREE.Mesh(geoChimenea, materialChimenea);
+  meshChimenea.position.set(-1.5, 3, -1);
+
+  // Humo
+  var geoHumo = new THREE.SphereGeometry(0.4, 16, 16);
+  var materialHumo = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
+  var meshHumo = new THREE.Mesh(geoHumo, materialHumo);
+  meshHumo.position.set(-1.5, 4, -1);
+
+
+  // TREN NAVIDEÑO
+
+
+  // Cabina
+  var geoCabina = new THREE.BoxGeometry(3, 2, 2.5);
+  var materialCabina = new THREE.MeshLambertMaterial({ color: 0xb22222 });
+  var meshCabina = new THREE.Mesh(geoCabina, materialCabina);
+  meshCabina.position.set(6, 0, 0);
+
+  // Techo cabina
+  var geoTechoCabina = new THREE.BoxGeometry(3.2, 0.4, 2.7);
+  var meshTechoCabina = new THREE.Mesh(geoTechoCabina, materialTecho);
+  meshTechoCabina.position.set(6, 1.3, 0);
+
+  // Frente del tren
+  var geoFrente = new THREE.CylinderGeometry(1.2, 1.2, 3, 32);
+  var materialFrente = new THREE.MeshLambertMaterial({ color: 0xd32f2f });
+  var meshFrente = new THREE.Mesh(geoFrente, materialFrente);
+  meshFrente.rotation.z = 1.57;
+  meshFrente.position.set(8, -0.3, 0);
+
+  // Chimenea tren
+  var geoChimeneaT = new THREE.CylinderGeometry(0.3, 0.4, 1, 32);
+  var materialChimeneaT = new THREE.MeshLambertMaterial({ color: 0x8b0000 });
+  var meshChimeneaT = new THREE.Mesh(geoChimeneaT, materialChimeneaT);
+  meshChimeneaT.position.set(8.4, 1, 0);
+
+  // Humo tren
+  var humo2 = new THREE.Mesh(geoHumo, materialHumo);
+  humo2.position.set(8.4, 2, 0);
+
+  // Faro
+  var geoFaro = new THREE.SphereGeometry(0.3, 16, 16);
+  var materialFaro = new THREE.MeshLambertMaterial({ color: 0xffff00 });
+  var meshFaro = new THREE.Mesh(geoFaro, materialFaro);
+  meshFaro.position.set(9.2, 0, 0);
+
+  // Ruedas
+  var geoRueda = new THREE.CylinderGeometry(0.4, 0.4, 0.6, 32);
+  var materialRueda = new THREE.MeshLambertMaterial({ color: 0x000000 });
+
+  var rueda1 = new THREE.Mesh(geoRueda, materialRueda);
+  rueda1.rotation.z = 1.57;
+  rueda1.position.set(5, -1.2, 1.2);
+
+  var rueda2 = new THREE.Mesh(geoRueda, materialRueda);
+  rueda2.rotation.z = 1.57;
+  rueda2.position.set(7, -1.2, 1.2);
+
+  var rueda3 = new THREE.Mesh(geoRueda, materialRueda);
+  rueda3.rotation.z = 1.57;
+  rueda3.position.set(5, -1.2, -1.2);
+
+  var rueda4 = new THREE.Mesh(geoRueda, materialRueda);
+  rueda4.rotation.z = 1.57;
+  rueda4.position.set(7, -1.2, -1.2);
+
+  //copo
+
+  var geoCopo = new THREE.SphereGeometry(0.15, 16, 16);
+  var matCopo = new THREE.MeshLambertMaterial({ color: 0xffffff });
+
+  var copo1 = new THREE.Mesh(geoCopo, matCopo);
+  copo1.position.set(2, 4, 1);
+
+  var copo2 = new THREE.Mesh(geoCopo, matCopo);
+  copo2.position.set(-3, 3.5, -1);
+
+  var copo3 = new THREE.Mesh(geoCopo, matCopo);
+  copo3.position.set(1, 5, -2);
+
+  var copo4 = new THREE.Mesh(geoCopo, matCopo);
+  copo4.position.set(-1, 4.3, 2);
+
+  var copo5 = new THREE.Mesh(geoCopo, matCopo);
+  copo5.position.set(3, 4.8, -1);
+
+  var copo6 = new THREE.Mesh(geoCopo, matCopo);
+  copo6.position.set(6, 5, -2);
+
+  var copo7= new THREE.Mesh(geoCopo, matCopo);
+  copo7.position.set(9, 4.3, 2);
+
+  var copo8 = new THREE.Mesh(geoCopo, matCopo);
+  copo8.position.set(8, 4.8, -1);
+
+ var copo9= new THREE.Mesh(geoCopo, matCopo);
+  copo9.position.set(7, 3, -1);
+
+  // GRUPO 
+  
+
+  var estacionGroup = new THREE.Group();
+  estacionGroup.add(meshBase);
+  estacionGroup.add(meshTecho);
+  estacionGroup.add(ventana1);
+  estacionGroup.add(ventana2);
+  estacionGroup.add(meshPuerta);
+  estacionGroup.add(meshLetrero);
+  estacionGroup.add(poste1);
+  estacionGroup.add(poste2);
+  estacionGroup.add(meshChimenea);
+  estacionGroup.add(meshHumo);
+
+  estacionGroup.add(meshCabina);
+  estacionGroup.add(meshTechoCabina);
+  estacionGroup.add(meshFrente);
+  estacionGroup.add(meshChimeneaT);
+  estacionGroup.add(humo2);
+  estacionGroup.add(meshFaro);
+  estacionGroup.add(rueda1);
+  estacionGroup.add(rueda2);
+  estacionGroup.add(rueda3);
+  estacionGroup.add(rueda4);
+
+   estacionGroup.add(copo1);
+   estacionGroup.add(copo2);
+   estacionGroup.add(copo3);
+   estacionGroup.add(copo4);
+   estacionGroup.add(copo5);
+ estacionGroup.add(copo6);
+   estacionGroup.add(copo7);
+   estacionGroup.add(copo8);
+ estacionGroup.add(copo9);
+
+  estacionGroup.position.set(x, y, z);
+
+  return estacionGroup;
+}
+
+var estacion = EstacionTrenNavidad({ x: 0, y: 0, z: 0 });
+scene.add(estacion);
+ 
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+
+    //🪄🪄 Animación - 
+ 
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+</script>
+</body>
+</html>

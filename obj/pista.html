@@ -1,0 +1,150 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>pista</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xEBEBEB);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+    const sizes ={
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    //redimensionar canvas
+      const canvas = document.getElementById('myCanvas');
+      window.addEventListener('resize', () => {
+      })
+sizes.width = window.innerWidth;
+sizes.height = window.innerHeight;
+
+ camera.aspect = sizes.width / sizes.height;
+ camera.updateProjectionMatrix();
+ renderer.setSize(sizes.width, sizes.height);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 30);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    ///LUCES
+   var light1= new THREE.DirectionalLight(0Xffffff,0.8);
+   light1.position.set (0,20,50);
+   scene.add(light1);
+// IceRink.js
+
+
+function createIceRink ({ x, y, z })  {
+       const group = new THREE.Group();
+
+    // 1. Piso de hielo (círculo)
+    const iceGeometry = new THREE.CircleGeometry(18, 32);
+    const iceMaterial = new THREE.MeshStandardMaterial({
+        color: 0xaee4ff
+    });
+
+    const ice = new THREE.Mesh(iceGeometry, iceMaterial);
+
+    // En lugar de usar Math.PI / 2, uso el número equivalente: 1.57
+    ice.rotation.x = -1.57;
+    group.add(ice);
+
+
+    // 2. Barandales alrededor (solo postes y bolita blanca)
+    const railMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+
+    for (let i = 0; i < 32; i++) {
+
+        const angle = (i / 32) * (3.14 * 2);
+        const px = Math.cos(angle) * 19.5;
+        const pz = Math.sin(angle) * 19.5;
+
+        // Poste vertical
+        const poleGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2.5, 8);
+        const pole = new THREE.Mesh(poleGeometry, railMaterial);
+        pole.position.set(px, 1.25, pz);
+        group.add(pole);
+
+        // Bolita sencilla (sin luces ni colores dinámicos)
+        const ballGeometry = new THREE.SphereGeometry(0.35, 12, 12);
+        const ballMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const ball = new THREE.Mesh(ballGeometry, ballMaterial);
+
+        ball.position.set(px, 2.3, pz);
+        group.add(ball);
+    }
+
+
+    // 3. Nieve sencilla (pequeñas esferas random)
+    for (let i = 0; i < 80; i++) {
+
+        const snowGeometry = new THREE.SphereGeometry(0.1, 6, 6);
+        const snowMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const flake = new THREE.Mesh(snowGeometry, snowMaterial);
+
+        flake.position.set(
+            (Math.random() - 0.5) * 40,
+            Math.random() * 10 + 5,
+            (Math.random() - 0.5) * 40
+        );
+
+        group.add(flake);
+    }
+
+    return group;
+}
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+
+    //🪄🪄 Animación - 
+ 
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>elfo</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xEBEBEB);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+    const sizes ={
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    //redimensionar canvas
+      const canvas = document.getElementById('myCanvas');
+      window.addEventListener('resize', () => {
+      })
+sizes.width = window.innerWidth;
+sizes.height = window.innerHeight;
+
+ camera.aspect = sizes.width / sizes.height;
+ camera.updateProjectionMatrix();
+ renderer.setSize(sizes.width, sizes.height);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 30);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    ///LUCES
+   var light1= new THREE.DirectionalLight(0Xffffff,0.8);
+   light1.position.set (0,20,50);
+   scene.add(light1);
+
+
+
+function Elfo1({ x, y, z }) {
+
+    // --- CUERPO ---
+    var cuerpo = new THREE.Mesh(
+        new THREE.CylinderGeometry(3, 3, 8, 16),
+        new THREE.MeshStandardMaterial({ color: 0x1ba047 }) // verde
+    );
+    cuerpo.position.set(0, 5.5, 0);
+
+    // --- CABEZA ---
+    var cabeza = new THREE.Mesh(
+        new THREE.SphereGeometry(3, 16, 16),
+        new THREE.MeshStandardMaterial({ color: 0xffe0bd })
+    );
+    cabeza.position.set(0, 12, 0);
+
+    // --- OREJAS PUNTIAGUDAS ---
+    var oreja1 = new THREE.Mesh(
+        new THREE.ConeGeometry(1.2, 2.5, 12),
+        new THREE.MeshStandardMaterial({ color: 0xffe0bd })
+    );
+    oreja1.position.set(-3.2, 12, 0);
+    oreja1.rotation.z = 0.9;
+
+    var oreja2 = new THREE.Mesh(
+        new THREE.ConeGeometry(1.2, 2.5, 12),
+        new THREE.MeshStandardMaterial({ color: 0xffe0bd })
+    );
+    oreja2.position.set(3.2, 12, 0);
+    oreja2.rotation.z = -0.9;
+
+    // --- GORRO ---
+    var gorro = new THREE.Mesh(
+        new THREE.ConeGeometry(4, 7, 16),
+        new THREE.MeshStandardMaterial({ color: 0xd40000 })
+    );
+    gorro.position.set(0, 17, 0);
+
+    var borla = new THREE.Mesh(
+        new THREE.SphereGeometry(1.2, 12, 12),
+        new THREE.MeshStandardMaterial({ color: 0xffffff })
+    );
+    borla.position.set(0, 20, 0);
+
+    // --- OJOS ---
+    var ojo1 = new THREE.Mesh(
+        new THREE.SphereGeometry(0.5, 8, 8),
+        new THREE.MeshStandardMaterial({ color: 0x000000 })
+    );
+    ojo1.position.set(-1, 12.3, 2.5);
+
+    var ojo2 = new THREE.Mesh(
+        new THREE.SphereGeometry(0.5, 8, 8),
+        new THREE.MeshStandardMaterial({ color: 0x000000 })
+    );
+    ojo2.position.set(1, 12.3, 2.5);
+
+    // --- BRAZOS ---
+    var brazo1 = new THREE.Mesh(
+        new THREE.CylinderGeometry(1, 1, 7, 12),
+        new THREE.MeshStandardMaterial({ color: 0x1ba047 })
+    );
+    brazo1.position.set(-4, 6, 0);
+    brazo1.rotation.z = -0.59;
+
+    var brazo2 = new THREE.Mesh(
+        new THREE.CylinderGeometry(1, 1, 7, 12),
+        new THREE.MeshStandardMaterial({ color: 0x1ba047 })
+    );
+    brazo2.position.set(4, 8, 0);
+    brazo2.rotation.z = -0.39;
+
+    // --- MANOS ---
+    var mano1 = new THREE.Mesh(
+        new THREE.SphereGeometry(1.1, 12, 12),
+        new THREE.MeshStandardMaterial({ color: 0xffe0bd })
+    );
+    mano1.position.set(-6.4, 3, 0);
+
+    var mano2 = new THREE.Mesh(
+        new THREE.SphereGeometry(1.1, 12, 12),
+        new THREE.MeshStandardMaterial({ color: 0xffe0bd })
+    );
+    mano2.position.set(5.8, 12, 0);
+
+    
+    // --- PIERNAS ---
+    var pierna1 = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.3, 1.3, 8, 12),
+        new THREE.MeshStandardMaterial({ color: 0x6d3f00 })
+    );
+    pierna1.position.set(-1.6, 1.5, 0);
+
+    var pierna2 = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.3, 1.3, 8, 12),
+        new THREE.MeshStandardMaterial({ color: 0x6d3f00 })
+    );
+    pierna2.position.set(1.6, 1.5, 0);
+
+    // --- GRUPO ---
+    var elfo = new THREE.Group();
+    elfo.add(cuerpo, cabeza, oreja1, oreja2, gorro, borla, ojo1, ojo2, brazo1, brazo2,mano1, mano2, pierna1, pierna2);
+
+    elfo.position.set(x, y, z);
+    return elfo;
+}
+
+
+var miElfo = Elfo1({ x: 10, y: 0, z: -5 });
+scene.add(miElfo);
+
+
+
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+
+    //🪄🪄 Animación - 
+ 
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>persona</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xEBEBEB);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+    const sizes ={
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    //redimensionar canvas
+      const canvas = document.getElementById('myCanvas');
+      window.addEventListener('resize', () => {
+      })
+sizes.width = window.innerWidth;
+sizes.height = window.innerHeight;
+
+ camera.aspect = sizes.width / sizes.height;
+ camera.updateProjectionMatrix();
+ renderer.setSize(sizes.width, sizes.height);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 30);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    ///LUCES
+   var light1= new THREE.DirectionalLight(0Xffffff,0.8);
+   light1.position.set (0,20,50);
+   scene.add(light1);
+
+
+
+function PersonaVestidoDetallada({ x, y, z }) {
+
+    // ===== CABEZA =====
+    var geoCabeza = new THREE.SphereGeometry(0.55, 24, 24);
+    var matPiel = new THREE.MeshLambertMaterial({ color: 0xffe0bd });
+    var cabeza = new THREE.Mesh(geoCabeza, matPiel);
+    cabeza.position.set(0, 3, 0);
+
+    // ===== CABELLO =====
+    // parte superior
+    var geoPeloArriba = new THREE.SphereGeometry(0.6, 24, 24, 0, Math.PI * 2, 0, Math.PI / 2);
+    var matPelo = new THREE.MeshLambertMaterial({ color: 0x2d2b2b });
+    var peloArriba = new THREE.Mesh(geoPeloArriba, matPelo);
+    peloArriba.position.set(0, 3.1, 0);
+
+    // caída del cabello atrás
+    var geoPeloAbajo = new THREE.CylinderGeometry(0.4, 0.35, 1, 20);
+    var peloAbajo = new THREE.Mesh(geoPeloAbajo, matPelo);
+    peloAbajo.position.set(0, 2.2, -0.25);
+
+    // ===== TORSO =====
+    var geoTorso = new THREE.BoxGeometry(1.1, 1, 0.6);
+    var matTorso = new THREE.MeshLambertMaterial({ color: 0xff8a80 });
+    var torso = new THREE.Mesh(geoTorso, matTorso);
+    torso.position.set(0, 1.8, 0);
+
+    // ===== BRAZOS =====
+    var geoBrazo = new THREE.CylinderGeometry(0.18, 0.18, 1.4, 16);
+    var matBrazo = new THREE.MeshLambertMaterial({ color: 0xffe0bd });
+
+    var brazoIzq = new THREE.Mesh(geoBrazo, matBrazo);
+    brazoIzq.position.set(-0.7, 1.6, 0);
+   
+
+    var brazoDer = new THREE.Mesh(geoBrazo, matBrazo);
+    brazoDer.position.set(0.8, 2.1, 0);
+    brazoDer.rotation.z = -0.39;
+
+    // ===== MANOS =====
+    var geoMano = new THREE.SphereGeometry(0.22, 16, 16);
+
+    var manoIzq = new THREE.Mesh(geoMano, matPiel);
+    manoIzq.position.set(-0.7, 1, 0);
+
+    var manoDer = new THREE.Mesh(geoMano, matPiel);
+    manoDer.position.set(1.1, 2.8, 0);
+
+    // ===== VESTIDO =====
+    var geoVestido = new THREE.ConeGeometry(1.4, 2.2, 28);
+    var matVestido = new THREE.MeshLambertMaterial({ color: 0xffb3c6 });
+    var vestido = new THREE.Mesh(geoVestido, matVestido);
+    vestido.position.set(0, 0.7, 0);
+
+    // ===== PIERNAS =====
+    var geoPierna = new THREE.CylinderGeometry(0.22, 0.22, 1.2, 12);
+    var matPierna = new THREE.MeshLambertMaterial({ color: 0xffe0bd });
+
+    var piernaIzq = new THREE.Mesh(geoPierna, matPierna);
+    piernaIzq.position.set(-0.4, -0.1, 0);
+
+    var piernaDer = new THREE.Mesh(geoPierna, matPierna);
+    piernaDer.position.set(0.4, -0.1, 0);
+
+    // ===== PATINES (opcionales) =====
+    var geoPatin = new THREE.BoxGeometry(0.8, 0.25, 1.1);
+    var matPatin = new THREE.MeshLambertMaterial({ color: 0x444444 });
+
+    var patinIzq = new THREE.Mesh(geoPatin, matPatin);
+    patinIzq.position.set(-0.4, -0.8, 0);
+
+    var patinDer = new THREE.Mesh(geoPatin, matPatin);
+    patinDer.position.set(0.4, -0.8, 0);
+
+    // ===== GRUPO =====
+    var group = new THREE.Group();
+    group.add(cabeza);
+    group.add(peloArriba);
+    group.add(peloAbajo);
+    group.add(torso);
+    group.add(brazoIzq);
+    group.add(brazoDer);
+    group.add(manoIzq);
+    group.add(manoDer);
+    group.add(vestido);
+    group.add(piernaIzq);
+    group.add(piernaDer);
+    group.add(patinIzq);
+    group.add(patinDer);
+
+    group.position.set(x, y, z);
+
+    return group;
+}
+
+var chicaDetallada = PersonaVestidoDetallada({ x: 5, y: 0, z: 0 });
+scene.add(chicaDetallada);
+
+
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+
+    //🪄🪄 Animación - 
+ 
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+
+</script>
+</body>
+</html>

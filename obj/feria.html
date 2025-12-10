@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>feria</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap">
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js"
+        }
+}
+</script>
+<script type="module">
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three';
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xEBEBEB);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+    const sizes ={
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    //redimensionar canvas
+      const canvas = document.getElementById('myCanvas');
+      window.addEventListener('resize', () => {
+      })
+sizes.width = window.innerWidth;
+sizes.height = window.innerHeight;
+
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(sizes.width, sizes.height);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 10);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    var gridHelper = new THREE.GridHelper(50,50,);
+    //scene.add (gridHelper);
+
+    var gridHelper = new THREE.PolarGridHelper(20,16,20,64);
+    //scene. add (gridHelper); //maya
+
+    var gridHelper = new THREE.AxesHelper(500);
+    //scene. add (gridHelper);  //lineas de coodenadas
+
+    ///////////
+
+    
+
+    ///LUCES
+   var light1= new THREE.DirectionalLight(0Xffffff,0.8);
+   light1.position.set (0,20,50);
+   scene.add(light1);
+
+
+
+// BASE
+var geometry10= new THREE. BoxGeometry (30,0.4,30)
+var material10= new THREE.MeshLambertMaterial({ 
+      color:0xCEF2DE, side: THREE.DoubleSide
+});
+    var mesh10= new THREE.Mesh(geometry10,material10);
+    scene.add(mesh10);
+    mesh10.position.set (-0,-1);
+    mesh10.castShadow = true;
+    
+
+// ------------------------------
+// FUNCIÓN: FeriaNavidadPequeña (ya integrada, sin for/if)
+// ------------------------------
+function FeriaNavidadPequeña({ x, y, z }) {
+
+    // Grupo principal
+    var feriaGroup = new THREE.Group();
+    feriaGroup.position.set(x, y, z);
+
+    // RUEDA DE LA FORTUNA ----------------------------------------------------
+    // Marco de la rueda (torus simple)
+    var geoRueda = new THREE.TorusGeometry(5, 0.3, 16, 50);
+    var matRueda = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    var meshRueda = new THREE.Mesh(geoRueda, matRueda);
+    meshRueda.rotation.x = 1.57;
+    meshRueda.position.set(0, 7, 0);
+
+    // Eje central
+    var geoEje = new THREE.CylinderGeometry(0.5, 0.5, 1, 16);
+    var matEje = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+    var meshEje = new THREE.Mesh(geoEje, matEje);
+    meshEje.rotation.x = 1.57;
+    meshEje.position.set(0, 7, 0);
+
+    // Base izquierda
+    var geoBase = new THREE.BoxGeometry(1, 6, 1);
+    var matBase = new THREE.MeshLambertMaterial({ color: 0x0066ff });
+    var baseIzq = new THREE.Mesh(geoBase, matBase);
+    baseIzq.position.set(-3, 3, 0);
+
+    // Base derecha
+    var baseDer = new THREE.Mesh(geoBase, matBase);
+    baseDer.position.set(3, 3, 0);
+
+    // Cabinas sin usar for (posiciones fijas)
+    var geoCabina = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+    var matCabina = new THREE.MeshLambertMaterial({ color: 0xffcc00 });
+
+    var cabina1 = new THREE.Mesh(geoCabina, matCabina);
+    cabina1.position.set(0, 12, 0);
+
+    var cabina2 = new THREE.Mesh(geoCabina, matCabina);
+    cabina2.position.set(0, 2, 0);
+
+    var cabina3 = new THREE.Mesh(geoCabina, matCabina);
+    cabina3.position.set(5, 7, 0);
+
+    var cabina4 = new THREE.Mesh(geoCabina, matCabina);
+    cabina4.position.set(-5, 7, 0);
+
+    // Agregar partes al grupo
+    feriaGroup.add(meshRueda);
+    feriaGroup.add(meshEje);
+    feriaGroup.add(baseIzq);
+    feriaGroup.add(baseDer);
+    feriaGroup.add(cabina1);
+    feriaGroup.add(cabina2);
+    feriaGroup.add(cabina3);
+    feriaGroup.add(cabina4);
+
+    // PUESTO NAVIDEÑO -------------------------------------------------------
+    var geoPuesto = new THREE.BoxGeometry(6, 3, 3);
+    var matPuesto = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+    var meshPuesto = new THREE.Mesh(geoPuesto, matPuesto);
+    meshPuesto.position.set(-10, 1.5, 0);
+
+    // Techo del puesto
+    var geoTecho = new THREE.ConeGeometry(4, 2, 4);
+    var matTecho = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    var meshTecho = new THREE.Mesh(geoTecho, matTecho);
+    meshTecho.position.set(-10, 4, 0);
+
+    feriaGroup.add(meshPuesto);
+    feriaGroup.add(meshTecho);
+
+    // ÁRBOL PEQUEÑO ---------------------------------------------------------
+    var geoArbolBase = new THREE.CylinderGeometry(0.6, 0.6, 1.5, 16);
+    var matArbolBase = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+    var tronco = new THREE.Mesh(geoArbolBase, matArbolBase);
+    tronco.position.set(8, 1, 0);
+
+    var geoArbolCopa = new THREE.ConeGeometry(2, 4, 16);
+    var matArbolCopa = new THREE.MeshLambertMaterial({ color: 0x00aa00 });
+    var copa = new THREE.Mesh(geoArbolCopa, matArbolCopa);
+    copa.position.set(8, 4, 0);
+
+    feriaGroup.add(tronco);
+    feriaGroup.add(copa);
+
+    return feriaGroup;
+}
+
+// Crear feria y agregarla a la escena (lado izquierdo)
+var miFeria = FeriaNavidadPequeña({
+    x: -30,  // lado izquierdo del escenario
+    y: 0,
+    z: 0
+});
+scene.add(miFeria);
+
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+
+    //🪄🪄 Animación - 
+ 
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+</script>
+</body>
+</html>
+
