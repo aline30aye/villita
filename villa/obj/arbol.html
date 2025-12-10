@@ -1,0 +1,132 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>arbol</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xEBEBEB);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+    const sizes ={
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    //redimensionar canvas
+      const canvas = document.getElementById('myCanvas');
+      window.addEventListener('resize', () => {
+      })
+sizes.width = window.innerWidth;
+sizes.height = window.innerHeight;
+
+ camera.aspect = sizes.width / sizes.height;
+ camera.updateProjectionMatrix();
+ renderer.setSize(sizes.width, sizes.height);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 30);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    ///LUCES
+   var light1= new THREE.DirectionalLight(0Xffffff,0.8);
+   light1.position.set (0,20,50);
+   scene.add(light1);
+
+  function ArbolNavidad({ x, y, z }) {
+// Tronco
+  var geoTronco = new THREE.CylinderGeometry(0.4, 0.4, 1.5, 32);
+  var materialTronco = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+  var meshTronco = new THREE.Mesh(geoTronco, materialTronco);
+  meshTronco.position.set(0, -2.5, 0);
+
+  // cono arriba
+  var geoBase = new THREE.ConeGeometry(2.5, 3, 32);
+  var materialVerde = new THREE.MeshLambertMaterial({ color: 0x006400 });
+  var meshBase = new THREE.Mesh(geoBase, materialVerde);
+  meshBase.position.set(0, -1.2, 0);
+
+  // Parte media
+  var geoMedio = new THREE.ConeGeometry(2, 2.5, 32);
+  var meshMedio = new THREE.Mesh(geoMedio, materialVerde);
+  meshMedio.position.set(0, 0.3, 0);
+
+  // Parte superior
+  var geoPunta = new THREE.ConeGeometry(1.4, 2, 32);
+  var meshPunta = new THREE.Mesh(geoPunta, materialVerde);
+  meshPunta.position.set(0, 1.9, 0);
+
+  // Estrella dorada
+  var geoEstrella = new THREE.OctahedronGeometry(0.4);
+  var materialEstrella = new THREE.MeshLambertMaterial({ color: 0xffd700 });
+  var meshEstrella = new THREE.Mesh(geoEstrella, materialEstrella);
+  meshEstrella.position.set(0, 3, 0);
+
+  // Grupo
+  var arbolGroup = new THREE.Group();
+  arbolGroup.add(meshTronco);
+  arbolGroup.add(meshBase);
+  arbolGroup.add(meshMedio);
+  arbolGroup.add(meshPunta);
+  arbolGroup.add(meshEstrella);
+  arbolGroup.position.set(x, y, z);
+
+  return arbolGroup;
+}
+
+var miArbol = ArbolNavidad({ x: -4, y: 0, z: 0 });
+scene.add(miArbol);
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+
+    //🪄🪄 Animación - 
+ 
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+</script>
+</body>
+</html>

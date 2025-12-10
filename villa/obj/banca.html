@@ -1,0 +1,159 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>banca</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xEBEBEB);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+    const sizes ={
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    //redimensionar canvas
+      const canvas = document.getElementById('myCanvas');
+      window.addEventListener('resize', () => {
+      })
+sizes.width = window.innerWidth;
+sizes.height = window.innerHeight;
+
+ camera.aspect = sizes.width / sizes.height;
+ camera.updateProjectionMatrix();
+ renderer.setSize(sizes.width, sizes.height);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 30);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    ///LUCES
+   var light1= new THREE.DirectionalLight(0Xffffff,0.8);
+   light1.position.set (0,20,50);
+   scene.add(light1);
+
+// BANCA DE MADERA CON NIEVE ACUMULADA
+import * as THREE from 'three';
+
+export default function banca({ x, y, z }) {
+
+    // Grupo principal
+    var grupoBanca = new THREE.Group();
+
+    // Materiales
+    var materialMadera = new THREE.MeshLambertMaterial({ color: 0x8b5a2b });
+    var materialMetal = new THREE.MeshLambertMaterial({ color: 0x3b3b3b });
+    var materialNieve = new THREE.MeshLambertMaterial({ color: 0xffffff });
+
+    // 🪵 Asiento de madera (tablas)
+    for (var i = 0; i < 4; i++) {
+        var geoTabla = new THREE.BoxGeometry(10, 0.6, 2);
+        var tabla = new THREE.Mesh(geoTabla, materialMadera);
+        tabla.position.set(0, 5 + i * 0.7, 0);
+        grupoBanca.add(tabla);
+    }
+
+    // 🪵 Respaldo (tablas verticales)
+    for (var j = 0; j < 3; j++) {
+        var geoResp = new THREE.BoxGeometry(10, 0.6, 2);
+        var respaldo = new THREE.Mesh(geoResp, materialMadera);
+        respaldo.position.set(-3, 8 + j * 0.7, -4);
+        respaldo.rotation.y = -0.25;
+        grupoBanca.add(respaldo);
+    }
+
+    // 🦾 Patas de metal
+    var geoPata = new THREE.CylinderGeometry(0.5, 0.5, 6, 12);
+
+    var pata1 = new THREE.Mesh(geoPata, materialMetal);
+    pata1.position.set(-4, 2.5, 3);
+
+    var pata2 = pata1.clone();
+    pata2.position.set(4, 2.5, 3);
+
+    var pata3 = pata1.clone();
+    pata3.position.set(-4, 2.5, -3);
+
+    var pata4 = pata1.clone();
+    pata4.position.set(4, 2.5, -3);
+
+    grupoBanca.add(pata1, pata2, pata3, pata4);
+
+    // ❄️ Nieve acumulada en el asiento
+    var geoNieveAsiento = new THREE.BoxGeometry(10, 0.8, 2.2);
+    var nieveAsiento1 = new THREE.Mesh(geoNieveAsiento, materialNieve);
+    nieveAsiento1.position.set(0, 7.5, 0);
+    grupoBanca.add(nieveAsiento1);
+
+    var nieveAsiento2 = nieveAsiento1.clone();
+    nieveAsiento2.position.y = 8.8;
+    grupoBanca.add(nieveAsiento2);
+
+    // ❄️ Nieve sobre el respaldo
+    var geoNieveResp = new THREE.BoxGeometry(10, 0.8, 2.2);
+    var nieveResp1 = new THREE.Mesh(geoNieveResp, materialNieve);
+    nieveResp1.position.set(-3, 11, -4);
+    nieveResp1.rotation.y = -0.25;
+    grupoBanca.add(nieveResp1);
+
+    // 📌 Posición final
+    grupoBanca.position.set(x, y, z);
+
+    return grupoBanca;
+}
+
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+
+    //🪄🪄 Animación - 
+ 
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Villa Navideña</title>
+        <style>
+          body {
+              margin: 0;
+              overflow: hidden;
+          }
+          #boton {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 40px;
+            cursor: pointer;
+          }
+          #activ {
+            color: rgba(183, 0, 255, 0.658);
+          }
+     </style>
+</head>
+<body>
+  <!--Boton para activar el pointerlock-->
+  <div id="boton">
+    Para comenzar da clic en + para activar <p id="activ">(  )</p>Mira al rededor usando el mouse, pulsa Esc para parar
+  </div>
+<canvas id="myCanvas"></canvas>
+<!--El elemento HTML canvas se puede utilizar para dibujar graficas y secuencias de comandos(por lo general JavaScript) .--> </canvas>
+<script type="importmap">
+{
+    "imports": {
+        "three": "./js/three.module.js",
+        "three/OrbitControls": "./js/OrbitControls.js",
+        "three/PointerLockControls": "./js/PointerLockControls.js",
+        "three/interactive": "./js/three.interactive.js"
+      }
+    }
+  </script>
+<script type="module">
+// 🗃️ Importar librerías
+import * as THREE from 'three';
+//import { OrbitControls } from 'three/OrbitControls';
+//import { RoundedBoxGeometry } from "./js/RoundedBoxGeometry.js";
+        import { InteractionManager } from 'three/interactive';//añade libreria itneractiva
+        import { TWEEN } from './js/tween.module.min.js'; // Libreria movimiento suave
+        import { PointerLockControls } from 'three/PointerLockControls'; //control de camara**<u>NOTA MUY IMPORTANTE.</u>** Al utilizar el control PointerLockControls se debe *comentar* todo lo relacionado al *OrbitControl*, no se pueden usar los dos.
+//objetos
+import chocolate from "./objetos/chocolate.js";
+import coro from "./objetos/coro.js";
+import esfera from "./objetos/esfera.js";
+import arbol from "./objetos/arbol.js";
+import muñeco from "./objetos/muñeco.js";
+import regalo from "./objetos/regalo.js";
+import trineo from "./objetos/trineo.js";
+import arbolgrande from "./objetos/arbolgrande.js";
+import pista from "./objetos/pista.js";
+import arco from "./objetos/arco.js";
+import banca from "./objetos/banca.js";
+import feria from "./objetos/feria.js";
+import iglu from "./objetos/iglu.js";
+import carrusel from "./objetos/carrusel.js";
+import estacion from "./objetos/estacion.js";
+import taller from "./objetos/taller.js";
+import galleta from "./objetos/galleta.js";
+import casitas from "./objetos/casitas.js";
+import mujer from "./objetos/mujer.js";
+import persona from "./objetos/persona.js";
+import elfo from "./objetos/elfo.js";
+// 🕹️ Renderer
+const renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'),
+    antialias: true
+});
+renderer.setPixelRatio(window.devicePixelRatio); 
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0xC7C69B);
+// 🎬 Escena
+var scene = new THREE.Scene();
+ //🎥 Configuración de cámara y escenario ######        
+var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, .1, 1000);
+camera.position.set(0, 10, 380);
+//////////////////revisadoooo
+// agregar el pointlock ########
+    var controls = new PointerLockControls( camera, renderer.domElement );
+    var boton = document.getElementById('boton'); 
+   
+        document.getElementById('activ').onclick=()=>{
+          controls.lock()
+        }
+        controls.addEventListener( 'lock', function () {
+          boton.style.display = 'none';
+        } );
+        controls.addEventListener( 'unlock', function () {
+          boton.style.display = '';
+        } );
+
+        // Añadir interactionManager #######
+        var interactionManager = new InteractionManager(
+          renderer,
+          camera,
+          renderer.domElement
+        );
+//  Redimensionar canvas
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+//  Controles de cámara
+/*var controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;*/
+//  Luz ambiental
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+// Luz direccional
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+dirLight.position.set(0, 50, -10);
+scene.add(dirLight);
+//  Fondo
+const loader = new THREE.TextureLoader();
+scene.background = loader.load('./assets/a1.jpeg');
+// Base 
+const geometryBase = new THREE.BoxGeometry(1000, 0.1, 800);
+const materialBase = new THREE.MeshLambertMaterial
+({ map: loader.load('./assets/fondo4.png') });
+const meshBase = new THREE.Mesh(geometryBase, materialBase);
+meshBase.position.set(0, 0, 0);
+meshBase.castShadow = true;
+scene.add(meshBase);
+////////////////
+//elfo
+var elfo1= elfo({ x: -60, y: 20, z: 60 });
+scene.add(elfo1);
+elfo1.scale.set(1, 1,1);
+elfo1.position.set(-130,1,60);
+elfo1.castShadow = true;
+//////////////
+//mujer
+var mujer1= mujer({ x: -60, y: 20, z: 60 });
+scene.add(mujer1);
+mujer1.scale.set(4, 4, 4);
+mujer1.position.set(-200,0,50);
+mujer1.castShadow = true;
+///////////////
+//mujer2
+var mujer3= mujer({ x: -60, y: 20, z: 60 });
+scene.add(mujer3);
+mujer3.scale.set(4, 4, 4);
+mujer3.position.set(-200,0,-200);
+mujer3.castShadow = true;
+///////////////
+//elfo2
+var elfo2= elfo({ x: -60, y: 20, z: 60 });
+scene.add(elfo2);
+elfo2.scale.set(1, 1,1);
+elfo2.position.set(250,2,50);
+elfo2.castShadow = true;
+//////////////
+//mujer3
+var mujer2= mujer({ x: -60, y: 20, z: 60 });
+scene.add(mujer2);
+mujer2.scale.set(4, 4, 4);
+mujer2.position.set(150,2,50);
+mujer2.castShadow = true;
+///////////////
+var feria1= feria({ x: -200, y: 1, z: 190 });
+scene.add(feria1);
+feria1.scale.set(8, 8, 8);
+feria1.castShadow = true;
+   // inician las interacciones ################################################################################################################
+        //Se añade el "evento" mouse arriba, mouse se retira, click
+        ///feria1
+        feria1.addEventListener('mouseover', (event) => {  //Evento para cuando colocamos el cursor sobre la figura
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(9,9,9);
+        });
+        feria1.addEventListener('mouseout', (event) => {  //evento para cuando quitas el cursor de la figura, si no se agrega se le quedara el color que se puso en el mouseover
+           document.body.style.cursor = 'default';
+           event.target.scale.set(8, 8, 8);
+        });
+        feria1.addEventListener('click', (event) => { //evento para cuando se suelta el clic
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };// se crea un objeto para "contener" las coordenadas
+          event.target.scale.set(8, 8, 8);
+          new TWEEN.Tween(coords) //Se declara el TWEEN, que permite que los movimientos sean fluidos y no de golpe 
+          .to({x:-150, y: 10, z: 100}) //se indican los cambios que se presentaran y en que variables, INDICA LA POSICIÓN FINAL DE MOVIMIENTO
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )  //Se actualizan las vartiables en el objetivo del movimiento SE ACTUALIZAN LAS VARIABLES EN LA CAMARA
+          )
+          .start();//El movimiento inicia
+        });
+interactionManager.add(feria1);
+////////////
+//galleta
+var galleta1= galleta({ x: 0, y: 25, z: -350 });
+scene.add(galleta1);
+galleta1.scale.set(8, 8, 8);
+galleta1.rotation.y = 6.28;  
+galleta1.castShadow = true;
+        ////*galleta1*////
+      galleta1.addEventListener('mouseover', (event) => {  
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(9,9,9);
+        });
+   galleta1.addEventListener('mouseout', (event) => {  
+           event.target.scale.set(8, 8, 8);
+        });
+ 
+     galleta1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(8, 8, 8);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 10, z: -280}) 
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )  
+          )
+          .start();
+        });
+interactionManager.add(galleta1);
+//////////////////////
+var carrusel1= carrusel({ x: -210, y: 0, z: 90 });
+scene.add(carrusel1);
+carrusel1.scale.set(8, 8, 8);
+carrusel1.castShadow = true;
+        ///carrusel1
+        carrusel1.addEventListener('mouseover', (event) => {  
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(9,9,9);
+        });
+        carrusel1.addEventListener('mouseout', (event) => { 
+           event.target.scale.set(8, 8, 8);
+        });
+        carrusel1.addEventListener('click', (event) => {
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(8, 8, 8);
+          new TWEEN.Tween(coords) 
+          .to({x:-120, y: 10, z: 30}) 
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )  
+          )
+          .start();
+        });
+interactionManager.add(carrusel1);
+/////////////////////
+//iglu 
+var iglu1= iglu({ x: -210, y: 0, z: 0 });
+scene.add(iglu1);
+iglu1.scale.set(6, 6 , 6);
+iglu1.castShadow = true;
+        ///iglu1
+        iglu1.addEventListener('mouseover', (event) => { 
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(7, 7, 7);
+        });
+        iglu1.addEventListener('mouseout', (event) => { 
+           document.body.style.cursor = 'default';
+           event.target.scale.set(6, 6, 6);
+        });
+        iglu1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(6, 6, 6);
+          new TWEEN.Tween(coords) 
+          .to({x:-120, y: 10, z: 40}) 
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )  
+          )
+          .start();
+        });
+interactionManager.add(iglu1);
+/////////////////////
+//muñeco 
+var muñeco1= muñeco({ x: -210, y: 15, z: -170 });
+scene.add(muñeco1);
+muñeco1.scale.set(4, 4, 4);
+muñeco1.castShadow = true;
+        ///muñeco1
+        muñeco1.addEventListener('mouseover', (event) => {  
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(5,5,5);
+        });
+        muñeco1.addEventListener('mouseout', (event) => {  
+           document.body.style.cursor = 'default';
+           event.target.scale.set(4, 4, 4);
+        });
+        muñeco1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(4, 4, 4);
+          new TWEEN.Tween(coords)  
+          .to({x:-210, y: 10, z: 10}) 
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )  
+          )
+          .start();
+        });
+interactionManager.add(muñeco1);
+////////////////////////
+//esfera 
+var esfera1= esfera({ x: -50, y: 12, z: -350 });
+scene.add(esfera1);
+esfera1.scale.set(8, 8, 8);
+esfera1.castShadow = true;
+        ////*esfera1*////
+        esfera1.addEventListener('mouseover', (event) => {  
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(9,9,9);
+        });
+        esfera1.addEventListener('mouseout', (event) => { 
+           document.body.style.cursor = 'default';
+           event.target.scale.set(8, 8, 8);
+        });
+        esfera1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(8, 8, 8);
+          new TWEEN.Tween(coords) 
+          .to({x:-50, y: 10, z: -280}) 
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+interactionManager.add(esfera1);
+///////////////////////////////
+//arbolgrande
+var arbolgrande1= arbolgrande({ x: 0, y: 33, z: 0 });
+scene.add(arbolgrande1);
+arbolgrande1.scale.set(4, 4, 4);
+arbolgrande1.castShadow = true;
+        ////arbolgrande1////
+       arbolgrande1.addEventListener('mouseover', (event) => { 
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(5,5,5);
+        });
+       arbolgrande1.addEventListener('mouseout', (event) => {  
+           document.body.style.cursor = 'default';
+           event.target.scale.set(4, 4, 4);
+        });
+      arbolgrande1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(4, 4, 4);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 10, z: 100}) 
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )  
+          )
+          .start();
+        });
+interactionManager.add(arbolgrande1);
+/////////////////
+//estacion
+var estacion1= estacion({ x: 400, y: 5, z: -130 });
+scene.add(estacion1);
+estacion1.scale.set(15, 15, 15);
+estacion1.castShadow = true;
+        ////*estacion1*////
+      estacion1.addEventListener('mouseover', (event) => {  
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(16,16,16);
+        });
+        estacion1.addEventListener('mouseout', (event) => { 
+           document.body.style.cursor = 'default';
+           event.target.scale.set(15, 15, 15);
+        });
+     estacion1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(15, 15, 15);
+          new TWEEN.Tween(coords) 
+          .to({x:300, y: 10, z: 110}) 
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+        ////////// fin de la interacción del 
+interactionManager.add(estacion1);
+//casitas
+var casitas1= casitas({ x: 0, y: 0, z: 0 });
+scene.add(casitas1);
+casitas1.scale.set(6, 6, 6);
+casitas1.castShadow = true;
+casitas1.rotation.y = 1.57;   
+//////////////
+var banca1= banca({ x: -200, y: 0, z: -120 });
+scene.add(banca1);
+banca1.scale.set(4, 4, 4);
+banca1.position.set(-200,0,-120);
+banca1.castShadow = true;
+        ////*banca*////
+      banca1.addEventListener('mouseover', (event) => {  
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(4,4,4);
+        });
+        banca1.addEventListener('mouseout', (event) => { 
+           document.body.style.cursor = 'default';
+           event.target.scale.set(4, 4, 4);
+        });
+     banca1.addEventListener('click', (event) => {
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(4, 4, 4);
+          new TWEEN.Tween(coords)  
+          .to({x:-200, y: 10, z: -120})
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+interactionManager.add(banca1);
+//arco
+var arco2= arco({ x: 0, y: 0, z:-150 });
+scene.add(arco2);
+arco2.scale.set(7, 7, 7);
+arco2.castShadow = true;
+///////////////////
+//arco
+var arco1= arco({ x: 0, y: 0, z:200 });
+scene.add(arco1);
+arco1.scale.set(7, 7, 7);
+arco1.castShadow = true;
+//regalo 
+var regalo1= regalo({ x: 50, y: 8, z: -350 });
+scene.add(regalo1);
+regalo1.scale.set(10, 10, 10);
+regalo1.castShadow = true;
+        ///Regalo
+        regalo1.addEventListener('mouseover', (event) => {
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(11,11,11);
+        });
+        regalo1.addEventListener('mouseout', (event) => {
+           document.body.style.cursor = 'default';
+           event.target.scale.set(10, 10, 10);
+        });
+        regalo1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(10, 10, 10);
+          new TWEEN.Tween(coords)  
+          .to({x:50, y: 10, z: -280})
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )
+          )
+          .start();
+        });
+interactionManager.add(regalo1);
+///////////////////////////////
+//trineo
+var trineo1= trineo({ x: 300, y: 5, z: 200 });
+scene.add(trineo1);
+trineo1.scale.set(10, 10, 10);
+trineo1.rotation.y = 4.71;
+trineo1.castShadow = true;
+        ///TRINEO
+      trineo1.addEventListener('mouseover', (event) => { 
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(11,11,11);
+        });
+    trineo1.addEventListener('mouseout', (event) => { 
+           document.body.style.cursor = 'default';
+           event.target.scale.set(10, 10, 10);
+        });
+     trineo1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(10, 10, 10);
+          new TWEEN.Tween(coords)  
+          .to({x:210, y: 10, z: 250}) 
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+interactionManager.add(trineo1);
+/////////////////////
+//chocolate
+var chocolate1= chocolate({ x: 150, y: 2, z: 300 });
+scene.add(chocolate1);
+chocolate1.scale.set(10, 10, 10);
+chocolate1.rotation.y = 4.71;  
+chocolate1.castShadow = true;
+        ///chocolate
+      chocolate1.addEventListener('mouseover', (event) => {  
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(11,11,11);
+        });
+    chocolate1.addEventListener('mouseout', (event) => { 
+           document.body.style.cursor = 'default';
+           event.target.scale.set(10, 10, 10);
+        });
+     chocolate1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(10, 10, 10);
+          new TWEEN.Tween(coords) 
+          .to({x:50, y: 10, z: 250})
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+interactionManager.add(chocolate1);
+//coro
+var coro1= coro({ x: 150, y: 2, z: 200 });
+scene.add(coro1);
+coro1.scale.set(10, 10, 10);
+coro1.rotation.y = 4.71;  
+coro1.castShadow = true;
+        ///coro
+      coro1.addEventListener('mouseover', (event) => { 
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(11,11,11);
+        });
+    coro1.addEventListener('mouseout', (event) => { 
+           document.body.style.cursor = 'default';
+           event.target.scale.set(10, 10, 10);
+        });
+     coro1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(1.0, 1.0, 1.0);
+          new TWEEN.Tween(coords) 
+          .to({x:100, y: 10, z: 220}) 
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )
+          )
+          .start();
+        });
+interactionManager.add(coro1);
+////////////
+//taller
+var taller1= taller({ x: 200, y: 2, z: -170 });
+scene.add(taller1);
+taller1.scale.set(15, 15, 15);
+taller1.castShadow = true;
+        ///Taller
+      taller1.addEventListener('mouseover', (event) => { 
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(16,16,16);
+        });
+    taller1.addEventListener('mouseout', (event) => {
+           document.body.style.cursor = 'default';
+           event.target.scale.set(15, 15, 15);
+        });
+     taller1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(15, 15, 15);
+          new TWEEN.Tween(coords)  
+          .to({x:200, y: 10, z: 100}) 
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z ) 
+          )
+          .start();
+        });
+interactionManager.add(taller1);
+///////////////
+//arbol 
+var arbol1= arbol({ x: 50, y: 65, z: 50 });
+scene.add(arbol1);
+arbol1.scale.set(4, 4, 4);
+arbol1.position.set(-100,15,0);
+arbol1.castShadow = true;
+        ///arbol1
+        arbol1.addEventListener('mouseover', (event) => { 
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(5,5,5);
+        });
+        arbol1.addEventListener('mouseout', (event) => {
+           document.body.style.cursor = 'default';
+           event.target.scale.set(4, 4, 4);
+        });
+
+        arbol1.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(4, 4, 4);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 10, z: 380})
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )
+          )
+          .start();
+        });
+interactionManager.add(arbol1);
+///////////////
+//arbol 
+var arbol2= arbol({ x: 100, y: 15, z: 0 });
+scene.add(arbol2);
+arbol2.scale.set(4, 4, 4);
+arbol2.position.set(100,15,0);
+arbol2.castShadow = true;
+        ///arbol1
+        arbol2.addEventListener('mouseover', (event) => { 
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(5,5,5);
+        });
+        arbol2.addEventListener('mouseout', (event) => {
+           document.body.style.cursor = 'default';
+           event.target.scale.set(4, 4, 4);
+        });
+
+        arbol2.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(4, 4, 4);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 10, z: 380})
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )
+          )
+          .start();
+        });
+interactionManager.add(arbol2);
+///////////////
+//arbo3 
+var arbol3= arbol({ x: 100, y: 15, z: 0 });
+scene.add(arbol3);
+arbol3.scale.set(4, 4, 4);
+arbol3.position.set(300,15,0);
+arbol3.castShadow = true;
+        ///arbol3
+        arbol3.addEventListener('mouseover', (event) => { 
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(5,5,5);
+        });
+        arbol3.addEventListener('mouseout', (event) => {
+           document.body.style.cursor = 'default';
+           event.target.scale.set(4, 4, 4);
+        });
+
+        arbol3.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(4, 4, 4);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 10, z: 380})
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )
+          )
+          .start();
+        });
+interactionManager.add(arbol3);
+///////////////////
+//arbo4
+var arbol4= arbol({ x: 100, y: 15, z: 0 });
+scene.add(arbol4);
+arbol4.scale.set(4, 4, 4);
+arbol4.position.set(-300,15,0);
+arbol4.castShadow = true;
+        ///arbol3
+        arbol4.addEventListener('mouseover', (event) => { 
+          document.body.style.cursor = 'pointer';
+          event.target.scale.set(5,5,5);
+        });
+        arbol4.addEventListener('mouseout', (event) => {
+           document.body.style.cursor = 'default';
+           event.target.scale.set(4, 4, 4);
+        });
+
+        arbol4.addEventListener('click', (event) => { 
+          var coords = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+          event.target.scale.set(4, 4, 4);
+          new TWEEN.Tween(coords) 
+          .to({x:0, y: 10, z: 380})
+          .onUpdate(() => camera.position.set(coords.x,coords.y,coords.z )
+          )
+          .start();
+        });
+interactionManager.add(arbol4);
+///////////////////
+//pista
+var pista1= pista({  x: -210, y: 2, z: -200 });
+scene.add(pista1);
+pista1.scale.set(4, 4, 4);
+pista1.position.set(-210,2,-200);
+pista1.castShadow = true;
+//////////////////
+//// CRUZ CENTRAL QUE SIRVE DE GUIA
+        var geometryx = new THREE.BoxGeometry(.0075, .05, .075);
+        var materialx = new THREE.MeshNormalMaterial({side:THREE.DoubleSide});
+        var meshx = new THREE.Mesh(geometryx, materialx);
+        meshx.position.set(0,0,-1);
+        var geometryx2 = new THREE.BoxGeometry(.05, .0075, .075);
+        var meshx2 = new THREE.Mesh(geometryx2, materialx);
+        meshx2.position.set(0,0,-1);
+        scene.add( camera );
+        camera.add( meshx, meshx2 );
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+    TWEEN.update()  //se agrega la transición del tween a functionrender para que genere la animación el movimiento suave
+    interactionManager.update();////// sedebe actualizar el interaction manager en las animaciones
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+      }
+</script>
+</body>
+</html>

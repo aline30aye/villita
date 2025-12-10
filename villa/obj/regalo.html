@@ -1,0 +1,149 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>Regalo</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xEBEBEB);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+    const sizes ={
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    //redimensionar canvas
+      const canvas = document.getElementById('myCanvas');
+      window.addEventListener('resize', () => {
+      })
+sizes.width = window.innerWidth;
+sizes.height = window.innerHeight;
+
+ camera.aspect = sizes.width / sizes.height;
+ camera.updateProjectionMatrix();
+ renderer.setSize(sizes.width, sizes.height);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 30);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    ///LUCES
+   var light1= new THREE.DirectionalLight(0Xffffff,0.8);
+   light1.position.set (0,20,50);
+   scene.add(light1);
+
+   
+   // CAJA DE REGALO
+    function CajaRegalo({ x, y, z }) {
+      // Caja principal
+      var geoCaja = new THREE.BoxGeometry(4, 4, 4);
+      var materialCaja = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+      var meshCaja = new THREE.Mesh(geoCaja, materialCaja);
+      meshCaja.position.set(0, 0, 0);
+
+      // Tapa
+      var geoTapa = new THREE.BoxGeometry(4.2, 0.6, 4.2);
+      var materialTapa = new THREE.MeshLambertMaterial({ color: 0xcc0000 });
+      var meshTapa = new THREE.Mesh(geoTapa, materialTapa);
+      meshTapa.position.set(0, 2.3, 0);
+
+      // Cinta vertical
+      var geoCintaV = new THREE.BoxGeometry(0.4, 4.2, 4.1);
+      var materialCinta = new THREE.MeshLambertMaterial({ color: 0xffd700 });
+      var meshCintaV = new THREE.Mesh(geoCintaV, materialCinta);
+      meshCintaV.position.set(0, 0, 0);
+
+      // Cinta horizontal
+      var geoCintaH = new THREE.BoxGeometry(4.1, 4.2, 0.4);
+      var meshCintaH = new THREE.Mesh(geoCintaH, materialCinta);
+      meshCintaH.position.set(0, 0, 0);
+
+      // Moño decorativo
+      var materialMoño = new THREE.MeshLambertMaterial({ color: 0xffd700 });
+
+      // Centro del moño (esferita)
+      var geoCentro = new THREE.SphereGeometry(0.3, 16, 16);
+      var meshCentro = new THREE.Mesh(geoCentro, materialMoño);
+      meshCentro.position.set(0, 2.9, 0);
+
+      // Aros laterales
+      var geoAro = new THREE.TorusGeometry(0.8, 0.15, 16, 100);
+      var moñoIzq = new THREE.Mesh(geoAro, materialMoño);
+      var moñoDer = new THREE.Mesh(geoAro, materialMoño);
+      moñoIzq.rotation.x = 1.5;
+      moñoDer.rotation.x = -1.5;
+      moñoIzq.position.set(-0.8, 2.9, 0);
+      moñoDer.position.set(0.8, 2.9, 0);
+
+
+      // Grupo completo
+      var cajaGroup = new THREE.Group();
+      cajaGroup.add(meshCaja);
+      cajaGroup.add(meshTapa);
+      cajaGroup.add(meshCintaV);
+      cajaGroup.add(meshCintaH);
+      cajaGroup.add(meshCentro);
+      cajaGroup.add(moñoIzq);
+      cajaGroup.add(moñoDer);
+      cajaGroup.position.set(x, y, z);
+
+      return cajaGroup;
+    }
+
+    var miCaja = CajaRegalo({ x: 0, y: 0, z: 0 });
+    scene.add(miCaja);
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+
+    //🪄🪄 Animación - 
+ 
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+</script>
+</body>
+</html>

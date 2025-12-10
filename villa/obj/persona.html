@@ -1,0 +1,171 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>persona</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xEBEBEB);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+    const sizes ={
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    //redimensionar canvas
+      const canvas = document.getElementById('myCanvas');
+      window.addEventListener('resize', () => {
+      })
+sizes.width = window.innerWidth;
+sizes.height = window.innerHeight;
+
+ camera.aspect = sizes.width / sizes.height;
+ camera.updateProjectionMatrix();
+ renderer.setSize(sizes.width, sizes.height);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 30);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    ///LUCES
+   var light1= new THREE.DirectionalLight(0Xffffff,0.8);
+   light1.position.set (0,20,50);
+   scene.add(light1);
+
+
+
+function PersonaNavidena({ x, y, z }) {
+
+    // --- CUERPO ---
+    var cuerpoGeo = new THREE.CylinderGeometry(3, 3, 8.5, 16);
+    var cuerpoMat = new THREE.MeshStandardMaterial({ color: 0x4a90e2 });
+    var cuerpo = new THREE.Mesh(cuerpoGeo, cuerpoMat);
+    cuerpo.position.set(0, 6, 0);
+
+    // --- CABEZA ---
+    var cabezaGeo = new THREE.SphereGeometry(3, 10, 10);
+    var cabezaMat = new THREE.MeshStandardMaterial({ color: 0xffd9b3 });
+    var cabeza = new THREE.Mesh(cabezaGeo, cabezaMat);
+    cabeza.position.set(0, 13, 0);
+
+    // --- GORRO ---
+    var gorroGeo = new THREE.ConeGeometry(4, 6, 16);
+    var gorroMat = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+    var gorro = new THREE.Mesh(gorroGeo, gorroMat);
+    gorro.position.set(0, 17, 0);
+
+    var borlaGeo = new THREE.SphereGeometry(1.2, 16, 16);
+    var borlaMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    var borla = new THREE.Mesh(borlaGeo, borlaMat);
+    borla.position.set(0, 20, 0);
+
+    // --- OJOS ---
+    var ojoGeo = new THREE.SphereGeometry(0.5, 8, 8);
+    var ojoMat = new THREE.MeshStandardMaterial({ color: 0x000000 });
+
+    var ojo1 = new THREE.Mesh(ojoGeo, ojoMat);
+    ojo1.position.set(-1, 13, 2.5);
+
+    var ojo2 = new THREE.Mesh(ojoGeo, ojoMat);
+    ojo2.position.set(1, 13, 2.5);
+
+    // --- BRAZOS ---
+    var brazoGeo = new THREE.CylinderGeometry(1, 1, 8, 12);
+    var brazoMat = new THREE.MeshStandardMaterial({ color: 0x4a90e2 });
+
+    var brazo1 = new THREE.Mesh(brazoGeo, brazoMat);
+    brazo1.position.set(-4, 8, 0);
+    brazo1.rotation.z = 1.2;
+
+    var brazo2 = new THREE.Mesh(brazoGeo, brazoMat);
+    brazo2.position.set(4, 8, 0);
+    brazo2.rotation.z = -1.2;
+
+    // --- PIERNAS ---
+    var piernaGeo = new THREE.CylinderGeometry(1.4, 1.4, 8, 12);
+    var piernaMat = new THREE.MeshStandardMaterial({ color: 0x000000 });
+
+    var pierna1 = new THREE.Mesh(piernaGeo, piernaMat);
+    pierna1.position.set(-1.8, 1.5, 0);
+
+    var pierna2 = new THREE.Mesh(piernaGeo, piernaMat);
+    pierna2.position.set(1.8, 1.5, 0);
+
+    // --- GRUPO ---
+    var personaGroup = new THREE.Group();
+    personaGroup.add(cuerpo);
+    personaGroup.add(cabeza);
+    personaGroup.add(gorro);
+    personaGroup.add(borla);
+    personaGroup.add(ojo1);
+    personaGroup.add(ojo2);
+    personaGroup.add(brazo1);
+    personaGroup.add(brazo2);
+    personaGroup.add(pierna1);
+    personaGroup.add(pierna2);
+
+    personaGroup.position.set(x, y, z);
+
+    return personaGroup;
+}
+
+var personaA = PersonaNavidena({ x: 10, y: 0, z: -10 });
+scene.add(personaA);
+
+
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+
+    //🪄🪄 Animación - 
+ 
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+
+</script>
+</body>
+</html>

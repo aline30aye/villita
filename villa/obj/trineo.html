@@ -1,0 +1,219 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>casa</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xEBEBEB);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+    const sizes ={
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    //redimensionar canvas
+      const canvas = document.getElementById('myCanvas');
+      window.addEventListener('resize', () => {
+      })
+sizes.width = window.innerWidth;
+sizes.height = window.innerHeight;
+
+ camera.aspect = sizes.width / sizes.height;
+ camera.updateProjectionMatrix();
+ renderer.setSize(sizes.width, sizes.height);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 30);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    ///LUCES
+   var light1= new THREE.DirectionalLight(0Xffffff,0.8);
+   light1.position.set (0,20,50);
+   scene.add(light1);
+
+function TrineoRenosNavideno(x, y, z) {
+
+  //TRINEO 
+  var geoBaseTrineo = new THREE.BoxGeometry(4, 0.6, 2);
+  var matTrineo = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+  var baseTrineo = new THREE.Mesh(geoBaseTrineo, matTrineo);
+  baseTrineo.position.set(0, 0, 0);
+
+  var geoAsiento = new THREE.BoxGeometry(2, 1.2, 1.8);
+  var matAsiento = new THREE.MeshLambertMaterial({ color: 0x8b0000 });
+  var asiento = new THREE.Mesh(geoAsiento, matAsiento);
+  asiento.position.set(-0.8, 0.9, 0);
+
+  var geoRiel = new THREE.CylinderGeometry(0.1, 0.1, 4, 32);
+  var matRiel = new THREE.MeshLambertMaterial({ color: 0xcccccc });
+
+  var riel1 = new THREE.Mesh(geoRiel, matRiel);
+  riel1.rotation.z = 1.57;
+  riel1.position.set(0.7, -0.5, 1);
+
+  var riel2 = new THREE.Mesh(geoRiel, matRiel);
+  riel2.rotation.z = 1.57;
+  riel2.position.set(0.7, -0.5, -1);
+
+  // RENO 1 
+  var geoCuerpoReno = new THREE.BoxGeometry(2.5, 1.2, 0.8);
+  var matReno = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+  var reno1 = new THREE.Mesh(geoCuerpoReno, matReno);
+  reno1.position.set(5, 0.2, 0);
+
+  var geoCabezaReno = new THREE.SphereGeometry(0.6, 16, 16);
+  var cabeza1 = new THREE.Mesh(geoCabezaReno, matReno);
+  cabeza1.position.set(6.5, 0.6, 0);
+
+  var geoNariz = new THREE.SphereGeometry(0.25, 16, 16);
+  var matNariz = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+  var nariz1 = new THREE.Mesh(geoNariz, matNariz);
+  nariz1.position.set(7, 0.6, 0);
+
+  // Cuernos
+  var geoCuerno = new THREE.CylinderGeometry(0.08, 0.08, 1, 32);
+  var matCuerno = new THREE.MeshLambertMaterial({ color: 0x654321 });
+
+  var cuerno1a = new THREE.Mesh(geoCuerno, matCuerno);
+  cuerno1a.position.set(6.5, 1.1, 0.3);
+  cuerno1a.rotation.z = 0.7;
+
+  var cuerno1b = new THREE.Mesh(geoCuerno, matCuerno);
+  cuerno1b.position.set(6.5, 1.1, -0.3);
+  cuerno1b.rotation.z = -0.7;
+
+  // RENO 2 
+  var reno2 = new THREE.Mesh(geoCuerpoReno, matReno);
+  reno2.position.set(8, 0.2, 0);
+
+  var cabeza2 = new THREE.Mesh(geoCabezaReno, matReno);
+  cabeza2.position.set(9.5, 0.6, 0);
+
+  var nariz2 = new THREE.Mesh(geoNariz, matNariz);
+  nariz2.position.set(10, 0.6, 0);
+
+  var cuerno2a = new THREE.Mesh(geoCuerno, matCuerno);
+  cuerno2a.position.set(9.5, 1.1, 0.3);
+  cuerno2a.rotation.z = 0.7;
+
+  var cuerno2b = new THREE.Mesh(geoCuerno, matCuerno);
+  cuerno2b.position.set(9.5, 1.1, -0.3);
+  cuerno2b.rotation.z = -0.7;
+
+  // COPOS DE NIEVE
+  var geoCopo = new THREE.SphereGeometry(0.15, 16, 16);
+  var matCopo = new THREE.MeshLambertMaterial({ color: 0xffffff });
+
+  var copo1 = new THREE.Mesh(geoCopo, matCopo);
+  copo1.position.set(0, 4, 0);
+
+  var copo2 = new THREE.Mesh(geoCopo, matCopo);
+  copo2.position.set(2, 3.6, -1);
+
+  var copo3 = new THREE.Mesh(geoCopo, matCopo);
+  copo3.position.set(-2, 4.5, 1);
+
+  var copo4 = new THREE.Mesh(geoCopo, matCopo);
+  copo4.position.set(5, 5, 0);
+
+  var copo5 = new THREE.Mesh(geoCopo, matCopo);
+  copo5.position.set(7, 4.2, -1);
+
+  var copo6 = new THREE.Mesh(geoCopo, matCopo);
+  copo6.position.set(9, 5, 1);
+
+  var copo7 = new THREE.Mesh(geoCopo, matCopo);
+  copo7.position.set(3, 4.8, 0);
+
+  // ---------- GRUPO ----------
+  var grupo = new THREE.Group();
+
+  grupo.add(baseTrineo);
+  grupo.add(asiento);
+  grupo.add(riel1);
+  grupo.add(riel2);
+
+  grupo.add(reno1);
+  grupo.add(cabeza1);
+  grupo.add(nariz1);
+  grupo.add(cuerno1a);
+  grupo.add(cuerno1b);
+
+  grupo.add(reno2);
+  grupo.add(cabeza2);
+  grupo.add(nariz2);
+  grupo.add(cuerno2a);
+  grupo.add(cuerno2b);
+
+  grupo.add(copo1);
+  grupo.add(copo2);
+  grupo.add(copo3);
+  grupo.add(copo4);
+  grupo.add(copo5);
+  grupo.add(copo6);
+  grupo.add(copo7);
+
+  grupo.position.set(x, y, z);
+  return grupo;
+}
+
+var trineo = TrineoRenosNavideno(0, 0, 0);
+scene.add(trineo);
+
+     
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+
+    //🪄🪄 Animación - 
+ 
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+</script>
+</body>
+</html>
